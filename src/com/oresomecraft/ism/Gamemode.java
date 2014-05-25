@@ -8,7 +8,8 @@ public enum Gamemode {
     FREEFALL,
     TROUBLED_BRIDGES,
     SUPER_LUNGE,
-    TOP_SNIPE;
+    TOP_SNIPE,
+    BOMB_DROP;
 
     public static void startRoundAccordingToType(Gamemode mode) {
         if (mode == MOB_SLAUGHTER_SKYFALL) {
@@ -25,6 +26,9 @@ public enum Gamemode {
         }
         if (mode == SUPER_LUNGE) {
             new SuperLunge(Storage.currentRound);
+        }
+        if (mode == BOMB_DROP) {
+            new BombDrop(Storage.currentRound);
         }
     }
 }

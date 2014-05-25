@@ -116,13 +116,13 @@ public class Utility {
                 int x = l.getBlockX();
                 int y = l.getBlockY();
                 int z = l.getBlockZ();
-                return (new Location(Bukkit.getWorld(Storage.roundID + ""), x, y, z));
+                return LocationUtil.getSafeDestination(new Location(Bukkit.getWorld(Storage.roundID + ""), x, y, z));
             } else {
                 Location l = Storage.lobbies.get(Storage.currentRound);
                 int x = l.getBlockX();
                 int y = l.getBlockY();
                 int z = l.getBlockZ();
-                return (new Location(Bukkit.getWorld(Storage.roundID + ""), x, y, z));
+                return LocationUtil.getSafeDestination(new Location(Bukkit.getWorld(Storage.roundID + ""), x, y, z));
             }
         } else {
             if (!(Storage.natural.contains(Storage.currentRound))) {

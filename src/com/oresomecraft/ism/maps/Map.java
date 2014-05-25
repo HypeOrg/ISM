@@ -3,8 +3,6 @@ package com.oresomecraft.ism.maps;
 import com.oresomecraft.ism.ISM;
 import com.oresomecraft.ism.Storage;
 import com.oresomecraft.ism.event.GlobalRoundFinishEvent;
-import com.oresomecraft.ism.event.PlayerLeaveEvent;
-import com.oresomecraft.ism.event.RoundBeginEvent;
 import com.oresomecraft.ism.util.Utility;
 import org.bukkit.*;
 import org.bukkit.entity.Arrow;
@@ -14,9 +12,9 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.*;
-import org.bukkit.event.inventory.CraftItemEvent;
-import org.bukkit.event.player.*;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -52,25 +50,7 @@ public abstract class Map implements Listener {
      */
     @EventHandler
     public void end(GlobalRoundFinishEvent event) {
-        BlockBreakEvent.getHandlerList().unregister(this);
-        BlockPlaceEvent.getHandlerList().unregister(this);
-        PlayerDeathEvent.getHandlerList().unregister(this);
-        EntityExplodeEvent.getHandlerList().unregister(this);
-        RoundBeginEvent.getHandlerList().unregister(this);
-        FoodLevelChangeEvent.getHandlerList().unregister(this);
-        EntityDamageByEntityEvent.getHandlerList().unregister(this);
-        GlobalRoundFinishEvent.getHandlerList().unregister(this);
-        PlayerPickupItemEvent.getHandlerList().unregister(this);
-        PlayerDropItemEvent.getHandlerList().unregister(this);
-        PlayerJoinEvent.getHandlerList().unregister(this);
-        PlayerQuitEvent.getHandlerList().unregister(this);
-        PlayerDeathEvent.getHandlerList().unregister(this);
-        PlayerMoveEvent.getHandlerList().unregister(this);
-        PlayerInteractEvent.getHandlerList().unregister(this);
-        CraftItemEvent.getHandlerList().unregister(this);
-        ProjectileHitEvent.getHandlerList().unregister(this);
-        EntityDamageEvent.getHandlerList().unregister(this);
-        PlayerLeaveEvent.getHandlerList().unregister(this);
+        HandlerList.unregisterAll(this);
         plugin = null;
         config = null;
         for (BukkitTask task : tasks) {
