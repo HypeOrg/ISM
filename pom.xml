@@ -5,12 +5,17 @@
     <groupId>com.oresomecraft</groupId>
     <artifactId>ISM</artifactId>
     <packaging>jar</packaging>
-    <name>It's simply Oresome!</name>
+    <name>It's simply Oresome</name>
+
+    <description>It's Simply Oresome!</description>
+    <inceptionYear>2013-98-30</inceptionYear>
+    <version>1.0</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <main.class>com.oresomecraft.ism.ISM</main.class>
     </properties>
+
     <build>
         <finalName>${project.name}</finalName>
         <sourceDirectory>${basedir}/src</sourceDirectory>
@@ -60,12 +65,18 @@
             </plugin>
         </plugins>
     </build>
+
     <repositories>
         <repository>
             <id>bukkit-repo</id>
             <url>http://repo.bukkit.org/content/groups/public</url>
         </repository>
+        <repository>
+            <id>OresomeCraft</id>
+            <url>http://assets.oresomecraft.com/maven</url>
+        </repository>
     </repositories>
+
     <dependencies>
         <dependency>
             <groupId>org.bukkit</groupId>
@@ -100,7 +111,4 @@
             <version>3.3</version>
         </dependency>
     </dependencies>
-    <description>Do I even need to explain!? It's simply Oresome!!</description>
-    <inceptionYear>2013-98-30</inceptionYear>
-    <version>1.0</version>
 </project>
