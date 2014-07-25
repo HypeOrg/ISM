@@ -25,9 +25,9 @@ public abstract class MapHandler {
         if (natural) {
             Bukkit.createWorld(new WorldCreator(ID));
         } else {
-            File worldToCopy = new File("maps/" + map.toLowerCase());
+            File worldToCopy = new File("/root/eyeofender/zblitz/zb1/maps/" + map);
             try {
-                copyFolder(worldToCopy, new File(Bukkit.getWorldContainer().getAbsolutePath() + "/" + ID));
+                copyFolder(worldToCopy, new File("/root/eyeofender/zblitz/zb1/" + ID));
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -24,10 +24,8 @@ public class Utility {
         p.setFoodLevel(20);
         p.setHealth(20);
         HashMap<Integer, ItemStack> temp = Storage.kits.get(map);
-        Iterator iterator = temp.entrySet().iterator();
         /* iterate through the hashmap to set the stuff to their slots */
-        while (iterator.hasNext()) {
-            Map.Entry<Integer, ItemStack> it = (Map.Entry<Integer, ItemStack>) iterator.next();
+        for (Map.Entry<Integer, ItemStack> it : temp.entrySet()) {
             ItemStack i = it.getValue();
             int slot = it.getKey();
             if (slot == -1) {
@@ -51,6 +49,10 @@ public class Utility {
         } else {
             p.setGameMode(GameMode.CREATIVE);
             p.getInventory().clear();
+            p.getInventory().setHelmet(new ItemStack(Material.AIR));
+            p.getInventory().setChestplate(new ItemStack(Material.AIR));
+            p.getInventory().setLeggings(new ItemStack(Material.AIR));
+            p.getInventory().setBoots(new ItemStack(Material.AIR));
             p.updateInventory();
         }
     }

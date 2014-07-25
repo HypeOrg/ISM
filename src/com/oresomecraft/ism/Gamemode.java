@@ -8,6 +8,7 @@ public enum Gamemode {
     FREEFALL,
     TROUBLED_BRIDGES,
     TOP_SNIPE,
+    MASTERCRAFT,
     BOMB_DROP;
 
     public static void startRoundAccordingToType(Gamemode mode) {
@@ -25,6 +26,9 @@ public enum Gamemode {
         }
         if (mode == BOMB_DROP) {
             new BombDrop(Storage.currentRound);
+        }
+        if (mode == MASTERCRAFT) {
+            new MasterCraft(Storage.currentRound);
         }
     }
 }

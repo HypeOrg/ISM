@@ -6,41 +6,32 @@ import com.oresomecraft.ism.event.GlobalRoundFinishEvent;
 import com.oresomecraft.ism.event.PlayerLeaveEvent;
 import com.oresomecraft.ism.event.RoundBeginEvent;
 import com.oresomecraft.ism.maps.Map;
-import com.oresomecraft.ism.object.CuboidRegion;
 import com.oresomecraft.ism.object.iPlayer;
-import com.oresomecraft.ism.util.Utility;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.*;
 
-public class FreeFall extends Map implements Listener {
-    public FreeFall(String map) {
+public class MasterCraft extends Map implements Listener {
+    public MasterCraft(String map) {
         super(map);
     }
 
     public Map config = super.config;
     public boolean pass = false;
 
-    int count = 181;
+    int count = 312;
 
     @EventHandler
     public void start(RoundBeginEvent event) {
@@ -50,6 +41,7 @@ public class FreeFall extends Map implements Listener {
     private void start() {
         if (pass) return;
         RoundBeginEvent.getHandlerList().unregister(this);
+        doChef();
         pass = true;
         BukkitTask task = new BukkitRunnable() {
             public void run() {
@@ -57,7 +49,7 @@ public class FreeFall extends Map implements Listener {
                     Bukkit.broadcastMessage(ChatColor.YELLOW + "[" + ChatColor.GOLD + "ISM" + ChatColor.YELLOW + "] " + ChatColor.RED + " GAME OVER!");
                     Bukkit.broadcastMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "    Congratulations to our winners!");
                     tasks.get(0).cancel();
-                    HashMap<String, Integer> temp = new HashMap<String, Integer>(kills);
+                    HashMap<String, Integer> temp = new HashMap<String, Integer>(points);
                     String winner = "No one";
                     try {
                         int maxValueInMap = (Collections.max(temp.values()));
@@ -90,7 +82,7 @@ public class FreeFall extends Map implements Listener {
                     } catch (Exception e) {
                         Bukkit.broadcastMessage(ChatColor.GRAY + "  2nd Place: " + ChatColor.AQUA + "No one");
                     }
-                     try {
+                    try {
                         int maxValueInMap3 = (Collections.max(temp.values()));
                         for (java.util.Map.Entry<String, Integer> entry : temp.entrySet()) {
                             if (entry.getValue() == maxValueInMap3) {
@@ -127,73 +119,209 @@ public class FreeFall extends Map implements Listener {
         tasks.add(task);
     }
 
-    public HashMap<String, Integer> kills = new HashMap<String, Integer>();
-    public ArrayList<String> cooldown = new ArrayList<String>();
-    public String leader = "No one";
+    public HashMap<Integer, List<Block>> benches = new HashMap<Integer, List<Block>>();
+    public HashMap<Block, Integer> signs = new HashMap<Block, Integer>();
 
-    @EventHandler
-    public void interact(PlayerInteractEvent event) {
-        if (!pass || !iPlayer.getIPlayer(event.getPlayer()).inGame) return;
-        if (event.getPlayer().getItemInHand().getType().equals(Material.EMPTY_MAP)) {
-            event.setCancelled(true);
-            event.getPlayer().updateInventory();
-        }
-        if (event.getPlayer().getItemInHand().getType().equals(Material.FEATHER)) {
-            event.getPlayer().sendMessage(ChatColor.RED + "You decided to try again!");
-            Utility.teleportToSpawn(iPlayer.getIPlayer(event.getPlayer()));
-            Utility.handKit(iPlayer.getIPlayer(event.getPlayer()));
-            kills.remove(event.getPlayer().getName());
-            kills.put(event.getPlayer().getName(), 0);
-        }
+    {
+        benches.put(1, Arrays.asList(Bukkit.getWorld(Storage.roundIDToAString()).getBlockAt(-35, 75, 66),
+                Bukkit.getWorld(Storage.roundIDToAString()).getBlockAt(-35, 75, 67),
+                Bukkit.getWorld(Storage.roundIDToAString()).getBlockAt(-35, 75, 70),
+                Bukkit.getWorld(Storage.roundIDToAString()).getBlockAt(-35, 74, 69)));
+        benches.put(2, Arrays.asList(Bukkit.getWorld(Storage.roundIDToAString()).getBlockAt(-35, 75, 74),
+                Bukkit.getWorld(Storage.roundIDToAString()).getBlockAt(-35, 75, 75),
+                Bukkit.getWorld(Storage.roundIDToAString()).getBlockAt(-35, 75, 78),
+                Bukkit.getWorld(Storage.roundIDToAString()).getBlockAt(-35, 74, 77)));
+        benches.put(3, Arrays.asList(Bukkit.getWorld(Storage.roundIDToAString()).getBlockAt(-35, 75, 57),
+                Bukkit.getWorld(Storage.roundIDToAString()).getBlockAt(-35, 75, 56),
+                Bukkit.getWorld(Storage.roundIDToAString()).getBlockAt(-35, 75, 53),
+                Bukkit.getWorld(Storage.roundIDToAString()).getBlockAt(-35, 74, 54)));
+        benches.put(4, Arrays.asList(Bukkit.getWorld(Storage.roundIDToAString()).getBlockAt(-35, 75, 49),
+                Bukkit.getWorld(Storage.roundIDToAString()).getBlockAt(-35, 75, 48),
+                Bukkit.getWorld(Storage.roundIDToAString()).getBlockAt(-35, 75, 45),
+                Bukkit.getWorld(Storage.roundIDToAString()).getBlockAt(-35, 74, 46)));
+    }
+
+    {
+        signs.put(Bukkit.getWorld(Storage.roundIDToAString()).getBlockAt(-35, 76, 68), 1);
+        signs.put(Bukkit.getWorld(Storage.roundIDToAString()).getBlockAt(-35, 76, 76), 2);
+        signs.put(Bukkit.getWorld(Storage.roundIDToAString()).getBlockAt(-35, 76, 55), 3);
+        signs.put(Bukkit.getWorld(Storage.roundIDToAString()).getBlockAt(-35, 76, 47), 4);
+    }
+
+    public HashMap<ItemStack, List<ItemStack>> ingredients = new HashMap<ItemStack, List<ItemStack>>();
+    public List<ItemStack> recipes = new ArrayList<ItemStack>();
+
+    {
+        ItemStack recipe1 = new ItemStack(Material.WOOD_SWORD, 1);
+        ItemMeta recipe1Meta = recipe1.getItemMeta();
+        recipe1Meta.setDisplayName("Shank");
+        recipe1.setItemMeta(recipe1Meta);
+        recipes.add(recipe1);
+        ingredients.put(recipe1, Arrays.asList(new ItemStack(Material.LOG, 1), new ItemStack(Material.EXP_BOTTLE, 16)));
+
+        ItemStack recipe2 = new ItemStack(Material.BEACON, 1);
+        recipes.add(recipe2);
+        ingredients.put(recipe2, Arrays.asList(new ItemStack(Material.NETHER_STAR), new ItemStack(Material.WOOD, 1, (short) 1),
+                new ItemStack(Material.SAND, 1), new ItemStack(Material.OBSIDIAN, 5), new ItemStack(Material.GLASS, 4)));
+    }
+
+    public HashMap<String, Integer> benchControl = new HashMap<String, Integer>();
+
+    public HashMap<String, Integer> points = new HashMap<String, Integer>();
+    public String leader = "No one";
+    private boolean start = false;
+
+    private List<Block> allBlocks() {
+        List<Block> blocks = new ArrayList<Block>();
+        for (List<Block> blockList : benches.values())
+            for (Block block : blockList)
+                blocks.add(block);
+        return blocks;
     }
 
     @EventHandler
-    public void death(PlayerDeathEvent event) {
-        if (!pass) return;
-        final Player p = event.getEntity();
-        kills.remove(event.getEntity().getName());
-        kills.put(event.getEntity().getName(), 0);
-        event.getEntity().sendMessage(ChatColor.RED + "You died and your score was reset, try again?");
+    public void interact(PlayerInteractEvent event) {
+        if (!pass) {
+            event.setCancelled(true);
+            return;
+        }
+        if (!start) {
+            event.setCancelled(true);
+            return;
+        }
+        if (event.isCancelled()) return;
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (benchControl.containsKey(event.getPlayer().getName())) {
+            List<Block> all = allBlocks();
+            all.removeAll(benches.get(benchControl.get(event.getPlayer().getName())));
+            if (all.contains(event.getClickedBlock())) {
+                event.getPlayer().sendMessage(ChatColor.RED + "You can't modify another workspace that isn't yours!");
+                event.setCancelled(true);
+            }
+            return;
+        }
+        if (!benchControl.containsKey(event.getPlayer().getName())) {
+            if (signs.containsKey(event.getClickedBlock())) {
+                if (benchControl.values().contains(signs.get(event.getClickedBlock()))) {
+                    event.getPlayer().sendMessage(ChatColor.RED + "This workspace is being used!");
+                } else {
+                    event.getPlayer().sendMessage(ChatColor.GOLD + "You have claimed " + signs.get(event.getClickedBlock()) + "!");
+                    benchControl.put(event.getPlayer().getName(), signs.get(event.getClickedBlock()));
+                }
+            } else {
+                List<Block> all = allBlocks();
+                if (all.contains(event.getClickedBlock())) {
+                    event.getPlayer().sendMessage(ChatColor.RED + "You can't modify another workspace that isn't yours!");
+                    event.setCancelled(true);
+                }
+            }
+        }
     }
 
     @EventHandler
     public void quit(PlayerQuitEvent event) {
         if (!pass) return;
-        final Player p = event.getPlayer();
-        kills.remove(event.getPlayer().getName());
+        points.remove(event.getPlayer().getName());
+        benchControl.remove(event.getPlayer().getName());
         if (leader.equals(event.getPlayer().getName())) leader = "No one";
     }
 
     @EventHandler
     public void leave(PlayerLeaveEvent event) {
         if (!pass) return;
-        final Player p = event.getPlayer();
-        kills.remove(event.getPlayer().getName());
+        points.remove(event.getPlayer().getName());
+        benchControl.remove(event.getPlayer().getName());
         if (leader.equals(event.getPlayer().getName())) leader = "No one";
     }
 
-    CuboidRegion[] greenRings = new CuboidRegion[]{new CuboidRegion(2, 240, -24, 4, 244, -25), new CuboidRegion(-4, 208, -93, -2, 212, -94),
-            new CuboidRegion(-31, 172, -163, -29, 176, -165),
-            new CuboidRegion(-4, 136, -240, -2, 140, -241),
-            new CuboidRegion(-32, 113, -274, -30, 114, -270),
-            new CuboidRegion(17, 76, -305, 13, 77, -307),
-            new CuboidRegion(-29, 42, -362, -33, 43, -360), new CuboidRegion(-21, 30, -373, -17, 31, -375)};
-
-    CuboidRegion[] redRings = new CuboidRegion[]{new CuboidRegion(-13, 238, -33, -9, 242, -35), new CuboidRegion(-14, 198, -93, -10, 202, -94),
-            new CuboidRegion(-25, 163, -166, -21, 167, -167), new CuboidRegion(-26, 131, -238, -22, 135, -239),
-            new CuboidRegion(1, 108, -274, 5, 109, -278), new CuboidRegion(-9, 74, -303, -5, 75, -307),
-            new CuboidRegion(7, 41, -331, 11, 42, -355)};
-
-    CuboidRegion[] yellowRings = new CuboidRegion[]{new CuboidRegion(-22, 238, -28, -20, 242, -29), new CuboidRegion(-29, 203, -81, -23, 209, -82),
-            new CuboidRegion(-3, 170, -170, 3, 176, -171), new CuboidRegion(-19, 35, -331, -13, 36, -337),
-            new CuboidRegion(-29, 68, -314, -35, 68, -308)};
-
     @EventHandler
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        if (event.getAction() == Action.PHYSICAL) {
+            Block block = event.getClickedBlock();
+
+            if (block == null)
+                return;
+
+            int blockType = block.getTypeId();
+
+            if (blockType == Material.SOIL.getId()) {
+                event.setUseInteractedBlock(org.bukkit.event.Event.Result.DENY);
+                event.setCancelled(true);
+
+                block.setTypeId(blockType);
+                block.setData(block.getData());
+            }
+        }
+    }
+
+    private void doChef() {
+        tasks.add(new BukkitRunnable() {
+            int count = 11;
+
+            public void run() {
+                count--;
+                if (count == 0) {
+                    start = true;
+                    doChefPast();
+                    this.cancel();
+                    return;
+                }
+                Bukkit.broadcastMessage(ChatColor.YELLOW + "[" + ChatColor.GOLD + "ISM" + ChatColor.YELLOW + "] " + ChatColor.RED + "MasterCraft starting in " + count + " second(s)!");
+            }
+        }.runTaskTimer(plugin, 0L, 20L));
+    }
+
+    private void doChefPast() {
+        tasks.add(new BukkitRunnable() {
+            public void run() {
+                benchControl.clear();
+                for (Block b : allBlocks()) {
+                    Material material = b.getType();
+                    b.setType(Material.AIR);
+                    b.setType(material);
+                }
+                for (iPlayer player : ISM.getIPlayers().values()) {
+                    if (player.inGame) {
+                        player.getInventory().clear();
+                        player.getInventory().setHelmet(new ItemStack(Material.AIR));
+                        player.getInventory().setChestplate(new ItemStack(Material.AIR));
+                        player.getInventory().setLeggings(new ItemStack(Material.AIR));
+                        player.getInventory().setBoots(new ItemStack(Material.AIR));
+                    }
+                }
+                Bukkit.broadcastMessage(ChatColor.YELLOW + "[" + ChatColor.GOLD + "ISM" + ChatColor.YELLOW + "] " + ChatColor.RED + "Picking new recipe!");
+                tasks.add(new BukkitRunnable() {
+                    ItemStack target = recipes.get(new Random().nextInt(recipes.size()));
+
+                    public void run() {
+                        Bukkit.broadcastMessage(ChatColor.YELLOW + "[" + ChatColor.GOLD + "ISM" + ChatColor.YELLOW + "] " + ChatColor.RED + "The recipe has been chosen!");
+                        Bukkit.broadcastMessage(ChatColor.GOLD + "The final item has to be a " + target.getType().toString().replaceAll("_", " ") + "!");
+                        if (target.hasItemMeta())
+                            Bukkit.broadcastMessage(ChatColor.GOLD + "  It has to be called " + ChatColor.RED + target.getItemMeta().getDisplayName() + ChatColor.GOLD + "!");
+                        Bukkit.broadcastMessage(ChatColor.RED + "" + ChatColor.BOLD + "    GO!");
+                        for (iPlayer player : ISM.getIPlayers().values()) {
+                            if (player.inGame) {
+                                player.getInventory().clear();
+                                player.getInventory().setHelmet(new ItemStack(Material.AIR));
+                                player.getInventory().setChestplate(new ItemStack(Material.AIR));
+                                player.getInventory().setLeggings(new ItemStack(Material.AIR));
+                                player.getInventory().setBoots(new ItemStack(Material.AIR));
+                                for (ItemStack i : ingredients.get(target)) {
+                                    player.getInventory().addItem(i);
+                                }
+                            }
+                        }
+                    }
+                }.runTaskLater(plugin, 10 * 20L));
+            }
+        }.runTaskTimer(plugin, 0L, 40 * 20L));
+    }
+    /*@EventHandler
     public void parachute(PlayerMoveEvent e) {
         if (!pass || !iPlayer.getIPlayer(e.getPlayer()).inGame) return;
         if (e.getPlayer().getVelocity().getY() < 0.3 && e.getPlayer().getLocation().subtract(0, 1, 0).getBlock().getType() == Material.AIR) {
             if (e.getPlayer().getItemInHand().getType().toString().equals("EMPTY_MAP")) {
-                Vector velocity = new Vector();
+                Vector velocity;
                 velocity = e.getPlayer().getLocation().getDirection().multiply(1.01);
                 velocity.setY(-0.3);
                 e.getPlayer().setVelocity(velocity);
@@ -311,5 +439,5 @@ public class FreeFall extends Map implements Listener {
                 callLead(p);
             }
         }
-    }
+    }*/
 }

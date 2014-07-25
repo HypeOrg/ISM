@@ -39,14 +39,14 @@ public class iPlayer extends CraftPlayer {
      * Gets a player's iPlayer object from their username.
      */
     public static iPlayer getIPlayer(String name) {
-        return ISM.getInstance().getIPlayers().get(name);
+        return ISM.getIPlayers().get(name);
     }
 
     /**
      * Gets a player's iPlayer object from their player instance.
      */
     public static iPlayer getIPlayer(Player p) {
-        return ISM.getInstance().getIPlayers().get(p.getName());
+        return ISM.getIPlayers().get(p.getName());
     }
 
     public void asyncRefreshPlayerInfo(final Player p) throws SQLException {

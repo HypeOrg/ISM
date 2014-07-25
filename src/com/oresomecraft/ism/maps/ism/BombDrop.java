@@ -23,6 +23,8 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
@@ -184,6 +186,9 @@ public class BombDrop extends Map implements Listener {
                             streak.put(player.getName(), streak.get(player.getName()) + 1);
                         }
                     }
+                    assert player != null;
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 100 * 100, 0));
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 100 * 100, 0));
                 }
             }
         }.runTaskTimer(plugin, 0L, 20L));

@@ -3,7 +3,6 @@ package com.oresomecraft.ism.object;
 import com.oresomecraft.ism.Storage;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 
@@ -84,9 +83,9 @@ public class CuboidRegion implements Iterable<Block> {
         int x = loc.getBlockX();
         int z = loc.getBlockZ();
         boolean xBorder = x == x1 || x == x2;
-        boolean x1Border = xBorder ? x == x1 : false;
+        boolean x1Border = xBorder && x == x1;
         boolean zBorder = z == z1 || z == z2;
-        boolean z1Border = zBorder ? z == z1 : false;
+        boolean z1Border = zBorder && z == z1;
         if (xBorder)
             loc.setX(x1Border ? x2 : x1 + 1);
         if (zBorder)
